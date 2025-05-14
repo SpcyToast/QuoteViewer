@@ -11,4 +11,4 @@ object quotes {
     )
 }
 
-q
+val list = quotes
