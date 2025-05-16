@@ -1,4 +1,4 @@
-package com.example.quoteviewer.theme
+package com.example.quoteviewer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
