@@ -5,10 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.quoteviewer.ui.theme.QuoteScreen
 import com.example.quoteviewer.ui.theme.QuoteViewerTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,23 +15,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuoteViewerTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    QuoteViewer()
+                    QuoteScreen()
                 }
             }
         }
     }
 
-}
-
-@Composable
-fun QuoteViewer() {
-    Text(text = "Placeholder")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SandboxPreview() {
-    Surface {
-        QuoteViewer()
-    }
 }
