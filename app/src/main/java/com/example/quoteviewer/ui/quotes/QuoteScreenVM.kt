@@ -23,7 +23,7 @@ class QuoteScreenVM @Inject constructor(
 
 
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
-        MutableStateFlow(QuoteScreenState)
+        MutableStateFlow(QuoteScreenState.Presenting(Quote("","")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
 
     init {
@@ -32,7 +32,7 @@ class QuoteScreenVM @Inject constructor(
             val todaysQuote: Quote = QuoteSelecter.getDailyQuote(index)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
-                    quote = todaysQuote
+                    quoteEntry = todaysQuote
                 )
             )
             Log.v("trpb67", "emitResult is $emitResult")
@@ -40,17 +40,36 @@ class QuoteScreenVM @Inject constructor(
     }
 
     fun newQuote() = viewModelScope.launch {
-        viewModelScope.launch {
-//          call random number generator which uses QuotesData.dailyQuotes.size - 1
-            val randomIndex: Int = 0
-            val todaysQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
-            val emitResult = _stateFlow.tryEmit(
-                QuoteScreenState.Presenting(
-                    quote = todaysQuote
-                )
+//         call random number generator which uses QuotesData.dailyQuotes.size - 1
+        val randomIndex: Int = 0
+        val todaysQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
+        val emitResult = _stateFlow.tryEmit(
+            QuoteScreenState.Presenting(
+                quoteEntry = todaysQuote
             )
-            Log.v("trpb67", "emitResult is $emitResult")
-        }
+        )
+        Log.v("trpb67", "emitResult is $emitResult")
+    }
+
+    fun viewHistory() = viewModelScope.launch {
+        // display a list of old quotes in order of appearance
+        val quoteHistory: List<Quote> = listOf(Quote("Sample Quote", "Sample Author"), Quote("Blink", "Blonk"))
+        val emitResult = _stateFlow.tryEmit(
+            QuoteScreenState.History(
+                history = quoteHistory
+            )
+        )
+        Log.v("trpb67", "emitResult is $emitResult")
+    }
+
+    fun focusQuote(selectedQuote: Quote) = viewModelScope.launch {
+        // display a quote from history in the main view
+        val emitResult = _stateFlow.tryEmit(
+            QuoteScreenState.Presenting(
+                quoteEntry = selectedQuote
+            )
+        )
+        Log.v("trpb67", "emitResult is $emitResult")
     }
 }
 

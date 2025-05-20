@@ -4,6 +4,9 @@ import com.example.quoteviewer.domain.Quote
 
 interface QuoteScreenState {
     data class Presenting(
-        val quote: Quote
+        val quoteEntry: Quote
+    ): QuoteScreenState
+    data class History(
+        val history: List<Quote>
     ): QuoteScreenState
 }
