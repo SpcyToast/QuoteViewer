@@ -63,7 +63,6 @@ class QuoteScreenVM @Inject constructor(
     }
 
     fun focusQuote(selectedQuote: Quote) = viewModelScope.launch {
-        // display a quote from history in the main view
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.Presenting(
                 quoteEntry = selectedQuote

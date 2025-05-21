@@ -2,6 +2,7 @@ package com.example.quoteviewer.ui.theme
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -42,7 +43,7 @@ private fun QuoteView(
     screenState: QuoteScreenState,
     newQuote: () -> Unit,
     viewHistory: () -> Unit,
-    focusQuote: (Int) -> Unit
+    focusQuote: (Quote) -> Unit
 ){
     Scaffold(
         topBar = {
@@ -95,16 +96,17 @@ private fun BoxScope.PresentingView(
 @Composable
 private fun BoxScope.HistoryView(
     screenState: QuoteScreenState.History,
-    focusQuote: (Int) -> Unit
+    focusQuote: (Quote) -> Unit
 ){
-//    LazyColumn(state = listState) {  }
-//    items(screenState.history) {
-//     listItem()
-//    Button(onClick = {
-//        focusQuote(0)
-//    }) {
-//        Text(text="First Quote")
-//    }
-//    }
+    Column {
+        screenState.history.forEach { quote ->
+            Button(onClick = {
+                focusQuote(quote)
+            }) {
+                Text(text=quote.quote)
+                Text(text=quote.author)
+            }
+        }
+    }
 }
 
