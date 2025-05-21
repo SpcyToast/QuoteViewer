@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quoteviewer.domain.Quote
 import com.example.quoteviewer.ui.quotes.QuoteScreenState
@@ -98,9 +99,10 @@ private fun BoxScope.HistoryView(
     screenState: QuoteScreenState.History,
     focusQuote: (Quote) -> Unit
 ){
-    Column {
-        screenState.history.forEach { quote ->
-            Button(onClick = {
+    LazyColumn {
+//        screenState.history.forEach { quote ->
+        val quote = screenState.history[0]
+            item{Button(onClick = {
                 focusQuote(quote)
             }) {
                 Text(text=quote.quote)

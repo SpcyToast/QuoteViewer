@@ -18,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val quoteList: QuotesData
 ): ViewModel(){
 
 
