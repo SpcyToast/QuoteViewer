@@ -1,6 +1,7 @@
 package com.example.quoteviewer.ui.quotes
 
 import android.util.Log
+import androidx.collection.MutableObjectList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,19 +17,19 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class QuoteScreenVM @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-): ViewModel(){
+class QuoteScreenVM @Inject constructor(): ViewModel(){
 
 
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
         MutableStateFlow(QuoteScreenState.Presenting(Quote("","")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
+    val quoteHistory: MutableList<Quote> = mutableListOf()
 
     init {
         viewModelScope.launch {
             val index = LocalDate.now().toEpochDay().toInt() % QuotesData.dailyQuotes.size
             val todaysQuote: Quote = QuoteSelecter.getDailyQuote(index)
+            quoteHistory.add(0, todaysQuote)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = todaysQuote
@@ -41,10 +42,11 @@ class QuoteScreenVM @Inject constructor(
     fun newQuote() = viewModelScope.launch {
 //         call random number generator which uses QuotesData.dailyQuotes.size - 1
         val randomIndex: Int = 0
-        val todaysQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
+        val nextQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
+        quoteHistory.add(0, nextQuote)
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.Presenting(
-                quoteEntry = todaysQuote
+                quoteEntry = nextQuote
             )
         )
         Log.v("trpb67", "emitResult is $emitResult")
@@ -52,7 +54,6 @@ class QuoteScreenVM @Inject constructor(
 
     fun viewHistory() = viewModelScope.launch {
         // display a list of old quotes in order of appearance
-        val quoteHistory: List<Quote> = listOf(Quote("Sample Quote", "Sample Author"), Quote("Blink", "Blonk"))
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.History(
                 history = quoteHistory

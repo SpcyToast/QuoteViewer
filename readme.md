@@ -25,3 +25,8 @@ Use Gradle to add necessary dependencies (e.g. for ViewModel, LiveData).
 
 # Bonus (optional):
 - Add a RecyclerView to show a history of viewed quotes.
+
+# Currently Working On:
+- Getting Hilt working 
+- Setting up a random number generator
+- Figure out how to get a history of all quotes
