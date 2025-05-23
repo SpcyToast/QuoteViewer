@@ -1,8 +1,6 @@
 package com.example.quoteviewer.ui.quotes
 
 import android.util.Log
-import androidx.collection.MutableObjectList
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.domain.Quote
@@ -15,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(): ViewModel(){
@@ -40,8 +39,7 @@ class QuoteScreenVM @Inject constructor(): ViewModel(){
     }
 
     fun newQuote() = viewModelScope.launch {
-//         call random number generator which uses QuotesData.dailyQuotes.size - 1
-        val randomIndex: Int = 0
+        val randomIndex: Int = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
         val nextQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
         quoteHistory.add(0, nextQuote)
         val emitResult = _stateFlow.tryEmit(
@@ -53,7 +51,6 @@ class QuoteScreenVM @Inject constructor(): ViewModel(){
     }
 
     fun viewHistory() = viewModelScope.launch {
-        // display a list of old quotes in order of appearance
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.History(
                 history = quoteHistory
