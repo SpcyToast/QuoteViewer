@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -86,7 +89,7 @@ private fun QuoteView(
                         ) {
                             Text(text = "New Quote")
                         }
-                        Spacer(modifier = Modifier.)
+//                        Spacer(modifier = Modifier.)
                         Button(
                             modifier = Modifier.fillMaxSize(),
                             shape = RectangleShape,
@@ -125,8 +128,9 @@ private fun QuoteView(
             screenState: QuoteScreenState.Presenting,
         ) {
             Column {
+                val author: String = screenState.quoteEntry.author
                 Text(text = screenState.quoteEntry.quote)
-                Text(text = screenState.quoteEntry.author)
+                Text(text = "- $author")
             }
         }
 
@@ -135,23 +139,37 @@ private fun QuoteView(
             screenState: QuoteScreenState.History,
             focusQuote: (Quote) -> Unit
         ) {
-            Column {
-                screenState.history.forEach { quote ->
-                    Button(
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                screenState.history.forEach{ quote -> (
+
+                    OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RectangleShape,
-                        border = BorderStroke(2.dp, Color(0,0,0)),
+                        border = BorderStroke(1.dp, Color(194,197,204)),
                         onClick = {
                             focusQuote(quote)
                         },
                     ) {
                         val thisAuthor = quote.author
-                        Column {
-                            Text(text = quote.quote, textAlign = TextAlign.Left)
-                            Text(text = "- $thisAuthor", textAlign = TextAlign.Left)
+                        Column(
+                            modifier = Modifier.padding(horizontal = 0.dp),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 0.dp),
+                                text = quote.quote,
+                                textAlign = TextAlign.Left,
+                            )
+                            Text(
+                                modifier = Modifier.padding(horizontal = 0.dp),
+                                text = "- $thisAuthor",
+                                textAlign = TextAlign.Left
+                            )
                         }
                     }
-                }
+                        )}
             }
         }
 
