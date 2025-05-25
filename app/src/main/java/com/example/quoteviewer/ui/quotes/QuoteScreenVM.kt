@@ -4,34 +4,29 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.domain.Quote
-import com.example.quoteviewer.domain.QuoteSelecter
-import com.example.quoteviewer.domain.QuotesData
+import com.example.quoteviewer.domain.QuoteSelector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(): ViewModel(){
 
-
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
         MutableStateFlow(QuoteScreenState.Presenting(Quote("","")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
-    val quoteHistory: MutableList<Quote> = mutableListOf()
+    private val quoteHistory: MutableList<Quote> = mutableListOf()
 
     init {
         viewModelScope.launch {
-            val index = LocalDate.now().toEpochDay().toInt() % QuotesData.dailyQuotes.size
-            val todaysQuote: Quote = QuoteSelecter.getDailyQuote(index)
-            quoteHistory.add(0, todaysQuote)
+            val todayQuote: Quote = QuoteSelector.getDailyQuote()
+            quoteHistory.add(0, todayQuote)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
-                    quoteEntry = todaysQuote
+                    quoteEntry = todayQuote
                 )
             )
             Log.v("trpb67", "emitResult is $emitResult")
@@ -39,8 +34,7 @@ class QuoteScreenVM @Inject constructor(): ViewModel(){
     }
 
     fun newQuote() = viewModelScope.launch {
-        val randomIndex: Int = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
-        val nextQuote: Quote = QuoteSelecter.getDailyQuote(randomIndex)
+        val nextQuote: Quote = QuoteSelector.getRandomQuote()
         quoteHistory.add(0, nextQuote)
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.Presenting(
