@@ -1,26 +1,23 @@
 package com.example.quoteviewer
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.example.quoteviewer.ui.quotes.QuoteScreen
-import com.example.quoteviewer.ui.theme.QuoteViewerTheme
+import androidx.fragment.app.FragmentActivity
+import com.example.quoteviewer.ui.quotes.QuoteFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            QuoteViewerTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    QuoteScreen()
-                }
-            }
-        }
+
+        setContentView(R.layout.activity_main)
+        showFragment()
+    }
+
+    private fun showFragment() {
+        val quoteFragment = QuoteFragment()
+        // Show QuoteFragment inside MainActivity, to replace 'rootContentPanel'
     }
 
 }
