@@ -47,16 +47,7 @@ class QuoteScreenVM @Inject constructor(): ViewModel(){
     fun viewHistory() = viewModelScope.launch {
         val emitResult = _stateFlow.tryEmit(
             QuoteScreenState.History(
-                history = quoteHistory
-            )
-        )
-        Log.v("trpb67", "emitResult is $emitResult")
-    }
-
-    fun focusQuote(selectedQuote: Quote) = viewModelScope.launch {
-        val emitResult = _stateFlow.tryEmit(
-            QuoteScreenState.Presenting(
-                quoteEntry = selectedQuote
+                historyQuotes = quoteHistory
             )
         )
         Log.v("trpb67", "emitResult is $emitResult")

@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.quoteviewer.ui.theme.QuoteScreen
+import com.example.quoteviewer.ui.quotes.QuoteScreen
 import com.example.quoteviewer.ui.theme.QuoteViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
 

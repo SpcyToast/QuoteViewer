@@ -7,6 +7,6 @@ interface QuoteScreenState {
         val quoteEntry: Quote
     ): QuoteScreenState
     data class History(
-        val history: List<Quote>
+        val historyQuotes: List<Quote>
     ): QuoteScreenState
 }
