@@ -65,4 +65,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
+
+    // Fragments
+    implementation(libs.androidx.fragment.ktx)
 }
