@@ -25,3 +25,4 @@ Use Gradle to add necessary dependencies (e.g. for ViewModel, LiveData).
 
 # Bonus (optional):
 - Add a RecyclerView to show a history of viewed quotes.
+
