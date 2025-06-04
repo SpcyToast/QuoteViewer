@@ -1,5 +1,7 @@
-package com.example.quoteviewer.domain
+package com.example.quoteviewer.viewmodel
 
+import com.example.quoteviewer.model.QuotesData
+import com.example.quoteviewer.view.theme.Quote
 import java.time.LocalDate
 import kotlin.random.Random
 

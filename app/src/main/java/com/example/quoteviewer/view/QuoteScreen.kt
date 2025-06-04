@@ -1,4 +1,4 @@
-package com.example.quoteviewer.ui.quotes
+package com.example.quoteviewer.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.quoteviewer.domain.Quote
-import com.example.quoteviewer.ui.theme.QuoteViewerTheme
+import com.example.quoteviewer.viewmodel.QuoteScreenState
+import com.example.quoteviewer.viewmodel.QuoteScreenVM
+import com.example.quoteviewer.view.theme.Quote
+import com.example.quoteviewer.view.theme.QuoteViewerTheme
 
 @Composable
 fun QuoteScreen(

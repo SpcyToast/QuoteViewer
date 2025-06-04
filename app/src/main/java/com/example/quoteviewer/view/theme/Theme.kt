@@ -1,4 +1,4 @@
-package com.example.quoteviewer.ui.theme
+package com.example.quoteviewer.view.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

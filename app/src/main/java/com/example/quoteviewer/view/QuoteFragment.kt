@@ -1,4 +1,4 @@
-package com.example.quoteviewer.ui.quotes
+package com.example.quoteviewer.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.example.quoteviewer.ui.theme.QuoteViewerTheme
+import com.example.quoteviewer.view.theme.QuoteViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class QuoteFragment : Fragment() {
@@ -23,7 +22,7 @@ class QuoteFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 QuoteViewerTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
+                    Surface(modifier = Modifier.Companion.fillMaxSize()) {
                         QuoteScreen()
                     }
                 }

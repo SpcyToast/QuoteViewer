@@ -2,7 +2,7 @@ package com.example.quoteviewer
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.example.quoteviewer.ui.quotes.QuoteFragment
+import com.example.quoteviewer.view.QuoteFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
