@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.quoteviewer.domain.Quote
+import com.example.quoteviewer.domain.model.Quote
 import com.example.quoteviewer.ui.theme.QuoteViewerTheme
 
 @Composable
@@ -138,7 +138,8 @@ private fun PreviewPresenting() {
             screenState = QuoteScreenState.Presenting(
                 quoteEntry = Quote(
                     "Follow your bliss and the universe will open doors where there are only walls.",
-                    "Joseph Campbell"
+                    "Joseph Campbell",
+                    ""
                 )
             ),
             viewNewQuote = {},
@@ -154,10 +155,10 @@ private fun PreviewHistory() {
         QuoteView(
             screenState = QuoteScreenState.History(
                 historyQuotes = listOf(
-                    Quote("Alone we can do so little; together we can do so much.", "Preview Author"),
-                    Quote("Nothing lasts forever. Not even your troubles.", "Preview Author 2"),
-                    Quote("The pessimist complains about the wind. The optimist expects it to change. The leader adjusts the sails.", "Preview Author 3"),
-                    Quote("Preview Quote 4", "Preview Author 4")
+                    Quote("Alone we can do so little; together we can do so much.", "Preview Author",""),
+                    Quote("Nothing lasts forever. Not even your troubles.", "Preview Author 2",""),
+                    Quote("The pessimist complains about the wind. The optimist expects it to change. The leader adjusts the sails.", "Preview Author 3",""),
+                    Quote("Preview Quote 4", "Preview Author 4","")
                 )
             ),
             viewNewQuote = {},

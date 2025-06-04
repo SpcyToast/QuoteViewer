@@ -1,21 +1,19 @@
 package com.example.quoteviewer.domain
 
-import java.time.LocalDate
-import kotlin.random.Random
+import com.example.quoteviewer.domain.adapterinterface.ApiService
+import com.example.quoteviewer.domain.adapterinterface.RetrofitInstance
+import com.example.quoteviewer.domain.model.Quote
+import kotlin.Result
 
-object QuoteSelector {
+class QuoteSelector{
+    val quoteApi = RetrofitInstance.getQuote().create(ApiService::class.java)
 
-    fun getDailyQuote(): Quote {
-        val index = todayQuoteIndex()
-        return QuotesData.dailyQuotes[index]
+    suspend fun invoke(): Result<Quote> {
+        return try {
+            val result: Quote = quoteApi.getQuote()
+            return Result.success(result)
+        } catch (e: Exception){
+            Result.failure(e)
+        }
     }
-
-    fun getRandomQuote(): Quote {
-        val randomIndex: Int = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
-        return QuotesData.dailyQuotes[randomIndex]
-    }
-
-    private fun todayQuoteIndex(): Int =
-        LocalDate.now().toEpochDay().toInt() % QuotesData.dailyQuotes.size
-
 }

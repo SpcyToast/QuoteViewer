@@ -3,7 +3,7 @@ package com.example.quoteviewer.ui.quotes
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quoteviewer.domain.Quote
+import com.example.quoteviewer.domain.model.Quote
 import com.example.quoteviewer.domain.QuoteSelector
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,13 +16,13 @@ import javax.inject.Inject
 class QuoteScreenVM @Inject constructor(): ViewModel(){
 
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
-        MutableStateFlow(QuoteScreenState.Presenting(Quote("","")))
+        MutableStateFlow(QuoteScreenState.Presenting(Quote("","","")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
     private val quoteHistory: MutableList<Quote> = mutableListOf()
 
     init {
         viewModelScope.launch {
-            val todayQuote: Quote = QuoteSelector.getDailyQuote()
+            val todayQuote: Quote = QuoteSelector
             quoteHistory.add(0, todayQuote)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(

@@ -1,6 +1,6 @@
 package com.example.quoteviewer.ui.quotes
 
-import com.example.quoteviewer.domain.Quote
+import com.example.quoteviewer.domain.model.Quote
 
 interface QuoteScreenState {
     data class Presenting(
