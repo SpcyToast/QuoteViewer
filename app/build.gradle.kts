@@ -69,5 +69,8 @@ dependencies {
     //Ktor
     val ktor_version: String by project
     implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+
+    implementation(libs.kotlinx.serialization.json)
 }

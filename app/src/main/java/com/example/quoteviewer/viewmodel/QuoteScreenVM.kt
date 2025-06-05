@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.viewmodel.QuoteScreenState
-import com.example.quoteviewer.view.theme.Quote
+import com.example.quoteviewer.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(): ViewModel(){
-
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
-        MutableStateFlow(QuoteScreenState.Presenting(Quote("", "")))
+        MutableStateFlow(QuoteScreenState.Presenting(Quote("", "", "")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
     private val quoteHistory: MutableList<Quote> = mutableListOf()
 

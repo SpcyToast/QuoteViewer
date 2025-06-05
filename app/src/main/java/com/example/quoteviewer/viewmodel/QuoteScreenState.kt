@@ -1,6 +1,6 @@
 package com.example.quoteviewer.viewmodel
 
-import com.example.quoteviewer.view.theme.Quote
+import com.example.quoteviewer.model.Quote
 
 interface QuoteScreenState {
     data class Presenting(

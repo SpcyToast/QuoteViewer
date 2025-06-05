@@ -1,11 +1,23 @@
 package com.example.quoteviewer.viewmodel
 
+import androidx.compose.runtime.produceState
 import com.example.quoteviewer.model.QuotesData
-import com.example.quoteviewer.view.theme.Quote
+import com.example.quoteviewer.model.Quote
+import com.example.quoteviewer.model.QuoteApiService
+import io.ktor.util.valuesOf
 import java.time.LocalDate
 import kotlin.random.Random
 
-object QuoteSelector {
+class QuoteSelector {
+
+    private val service = QuoteApiService.create()
+
+    val quote = produceState<Quote>(
+        initialValue = Quote("","",""),
+        producer = {
+            value = service.getQuote()
+        }
+    ) { }
 
     fun getDailyQuote(): Quote {
         val index = todayQuoteIndex()
