@@ -10,9 +10,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import io.ktor.http.headers
 import io.ktor.client.call.body
+import javax.inject.Inject
 
 
-class QuoteClient {
+class QuoteClient @Inject constructor(){
 
     private val httpClient = HttpClient(OkHttp) {
         install(Logging)
