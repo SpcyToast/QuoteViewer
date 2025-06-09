@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuoteScreenVM @Inject constructor(): ViewModel(){
+class QuoteScreenVM @Inject constructor(
+    private val quoteSelector: QuoteSelector
+): ViewModel(){
     private val _stateFlow: MutableStateFlow<QuoteScreenState> =
         MutableStateFlow(QuoteScreenState.Presenting(Quote("", "", "")))
     val stateFlow: StateFlow<QuoteScreenState> = _stateFlow.asStateFlow()
@@ -21,26 +23,28 @@ class QuoteScreenVM @Inject constructor(): ViewModel(){
 
     init {
         viewModelScope.launch {
-            val todayQuote: Quote = QuoteSelector.getDailyQuote()
-            quoteHistory.add(0, todayQuote)
-            val emitResult = _stateFlow.tryEmit(
-                QuoteScreenState.Presenting(
-                    quoteEntry = todayQuote
+            quoteSelector.fetchQuote().onSuccess { initalQuote ->
+                quoteHistory.add(0, initalQuote)
+                val emitResult = _stateFlow.tryEmit(
+                    QuoteScreenState.Presenting(
+                        quoteEntry = initalQuote
+                    )
                 )
-            )
-            Log.v("trpb67", "emitResult is $emitResult")
+                Log.v("trpb67", "emitResult is $emitResult")
+            }.onFailure {  }
         }
     }
 
     fun newQuote() = viewModelScope.launch {
-        val nextQuote: Quote = QuoteSelector.getRandomQuote()
-        quoteHistory.add(0, nextQuote)
-        val emitResult = _stateFlow.tryEmit(
-            QuoteScreenState.Presenting(
-                quoteEntry = nextQuote
+        quoteSelector.fetchQuote().onSuccess { nextQuote ->
+            quoteHistory.add(0, nextQuote)
+            val emitResult = _stateFlow.tryEmit(
+                QuoteScreenState.Presenting(
+                    quoteEntry = nextQuote
+                )
             )
-        )
-        Log.v("trpb67", "emitResult is $emitResult")
+            Log.v("trpb67", "emitResult is $emitResult")
+        }.onFailure {  }
     }
 
     fun viewHistory() = viewModelScope.launch {

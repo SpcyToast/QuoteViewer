@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlinx.serialization)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
@@ -67,10 +68,16 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     //Ktor
-    val ktor_version: String by project
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-android:$ktor_version")
-    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation(libs.ktor.client.core)
+//    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.logging)
+//    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+//    val ktor_version: String by project
+//    implementation("io.ktor:ktor-client-android:$ktor_version")
+//    implementation("io.ktor:ktor-client-serialization:$ktor_version")
 
     implementation(libs.kotlinx.serialization.json)
 }
