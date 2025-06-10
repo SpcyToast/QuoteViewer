@@ -1,6 +1,5 @@
 package com.example.quoteviewer.model
 
-
 import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
@@ -29,15 +28,14 @@ class QuoteClient @Inject constructor(){
 
     suspend fun getQuote(): Quote{
         try {
-            Log.i("Response","Called")
             val response = httpClient.get(HttpRoutes.QUOTE)
             {
                 header("X-API-KEY", HttpRoutes.X_API_KEY)
             }
-            Log.i("Response",response.body<List<Quote>>().first().quote)
             return response.body<List<Quote>>().first()
         } catch (e: Exception) {
-            return Quote(e.message.toString(), "Error Message", "")
+            Log.e("Error","getQuote failed to get a response")
+            return Quote(e.message.toString(), "Error", "Error")
         }
     }
 }
