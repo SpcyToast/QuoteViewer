@@ -30,7 +30,6 @@ class QuoteScreenVM @Inject constructor(
                         quoteEntry = initalQuote
                     )
                 )
-                Log.v("trpb67", "emitResult is $emitResult")
             }.onFailure {  }
         }
     }
@@ -43,7 +42,6 @@ class QuoteScreenVM @Inject constructor(
                     quoteEntry = nextQuote
                 )
             )
-            Log.v("trpb67", "emitResult is $emitResult")
         }.onFailure {  }
     }
 
@@ -53,6 +51,5 @@ class QuoteScreenVM @Inject constructor(
                 historyQuotes = quoteHistory
             )
         )
-        Log.v("trpb67", "emitResult is $emitResult")
     }
 }

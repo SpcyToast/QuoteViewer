@@ -9,10 +9,9 @@ class QuoteSelector @Inject constructor(
     private val quoteClient: QuoteClient
 ){
     suspend fun fetchQuote(): Result<Quote> {
-        Log.i("fetchReq","fetchQuote was called successfully")
         return try {
-            val result = quoteClient.getQuote()
-            Result.success(result!!)
+            val result:Quote = quoteClient.getQuote()
+            Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
         }
