@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.viewmodel.QuoteScreenState
 import com.example.quoteviewer.model.Quote
+import com.example.quoteviewer.model.QuotesData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(
@@ -32,12 +34,14 @@ class QuoteScreenVM @Inject constructor(
                     )
                 )
             }.onFailure { e ->
+                val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
-                        quoteEntry = Quote(e.message.toString(),"Error","Error"),
+                        quoteEntry = QuotesData.dailyQuotes[randomIndex],
                         isLoading = false
                     )
                 )
+                Log.e("fetchError",e.message.toString())
             }
         }
     }
@@ -53,12 +57,14 @@ class QuoteScreenVM @Inject constructor(
                 )
             )
         }.onFailure { e ->
+            val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
-                    quoteEntry = Quote(e.message.toString(),"Error","Error"),
+                    quoteEntry = QuotesData.dailyQuotes[randomIndex],
                     isLoading = false
                 )
             )
+            Log.e("fetchError",e.message.toString())
         }
     }
 
