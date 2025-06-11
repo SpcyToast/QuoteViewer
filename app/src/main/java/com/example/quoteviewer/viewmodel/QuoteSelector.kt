@@ -9,12 +9,11 @@ class QuoteSelector @Inject constructor(
     private val quoteClient: QuoteClient
 ){
     suspend fun fetchQuote(): Result<Quote> {
-        return try {
+        try {
             val result:Quote = quoteClient.getQuote()
-            Result.success(result)
+            return Result.success(result)
         } catch (e: Exception) {
-            Log.e("Error",e.message.toString())
-            Result.failure(e)
+            return Result.failure(e)
         }
     }
 }

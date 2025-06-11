@@ -33,13 +33,15 @@ class QuoteScreenVM @Inject constructor(
                     )
                 )
             }.onFailure { e ->
+                showSnackbar(e.message.toString())
                 val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
+                val initalQuote = QuotesData.dailyQuotes[randomIndex]
+                quoteHistory.add(0, initalQuote)
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
-                        quoteEntry = QuotesData.dailyQuotes[randomIndex],
+                        quoteEntry = initalQuote,
                     )
                 )
-                Log.e("fetchError",e.message.toString())
             }
         }
     }
@@ -54,13 +56,12 @@ class QuoteScreenVM @Inject constructor(
                 )
             )
         }.onFailure { e ->
-            val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
+            showSnackbar(e.message.toString())
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
-                    quoteEntry = QuotesData.dailyQuotes[randomIndex],
+                    quoteEntry = quoteHistory.first(),
                 )
             )
-            Log.e("fetchError",e.message.toString())
         }
     }
 
@@ -70,5 +71,19 @@ class QuoteScreenVM @Inject constructor(
                 historyQuotes = quoteHistory
             )
         )
+    }
+
+    fun showSnackbar(errorMessage: String) {
+        viewModelScope.launch {
+            SnackbarController.sendEvent(
+                event = SnackbarEvent(
+                    message = errorMessage,
+                    action = SnackbarAction(
+                        name = "retry",
+                        action = newQuote() as () -> Unit
+                    )
+                )
+            )
+        }
     }
 }

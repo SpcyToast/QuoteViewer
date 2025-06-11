@@ -14,6 +14,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -21,15 +25,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.quoteviewer.viewmodel.QuoteScreenState
 import com.example.quoteviewer.viewmodel.QuoteScreenVM
 import com.example.quoteviewer.model.Quote
 import com.example.quoteviewer.view.theme.QuoteViewerTheme
+import com.example.quoteviewer.viewmodel.SnackbarController
+import kotlinx.coroutines.launch
 
 @Composable
 fun QuoteScreen(
@@ -51,7 +62,30 @@ private fun QuoteView(
     viewNewQuote: () -> Unit,
     viewHistory: () -> Unit,
 ) {
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    val scope = rememberCoroutineScope()
+    ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
+        scope.launch{
+            snackbarHostState.currentSnackbarData?.dismiss()
+            val result = snackbarHostState.showSnackbar(
+                message = event.message,
+                actionLabel = event.action?.name,
+                duration = SnackbarDuration.Short
+            )
+
+            if (result == SnackbarResult.ActionPerformed){
+                event.action?.action?.invoke()
+            }
+        }
+    }
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+        },
         topBar = {
             TopAppBar(
                 title = { Text("Daily Quotes") },
@@ -82,26 +116,23 @@ private fun QuoteView(
             when (screenState) {
                 is QuoteScreenState.Loading -> LoadingView()
                 is QuoteScreenState.Presenting -> PresentingView(
-                    screenState = screenState,
-                )
+                    screenState = screenState,)
                 is QuoteScreenState.History -> HistoryView(
-                    screenState = screenState,
-                )
+                    screenState = screenState,)
             }
         }
     }
 }
+
 
 @Composable
 private fun ColumnScope.LoadingView() {
     Box(modifier = Modifier.height(20.dp))
     Text(
         modifier = Modifier
-            .fillMaxWidth(),
-//            .padding(20.dp)
-//            .align(Alignment.CenterHorizontally),
+            .fillMaxWidth()
+            .padding(20.dp),
         text = "Loading....",
-//        textAlign = Alignment.CenterHorizontally
     )
 }
 

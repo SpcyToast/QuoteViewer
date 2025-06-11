@@ -28,8 +28,7 @@ class QuoteClient @Inject constructor(){
     }
 
     suspend fun getQuote(): Quote{
-        val response = httpClient.get(HttpRoutes.QUOTE)
-        {
+        val response = httpClient.get(HttpRoutes.QUOTE){
             header("X-API-KEY", HttpRoutes.X_API_KEY)
         }
         return response.body<List<Quote>>().first()
