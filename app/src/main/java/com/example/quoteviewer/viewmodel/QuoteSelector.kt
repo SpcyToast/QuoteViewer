@@ -13,7 +13,7 @@ class QuoteSelector @Inject constructor(
             val result:Quote = quoteClient.getQuote()
             Result.success(result)
         } catch (e: Exception) {
-            Log.e("Error","fetchQuote failed to get a result")
+            Log.e("Error",e.message.toString())
             Result.failure(e)
         }
     }

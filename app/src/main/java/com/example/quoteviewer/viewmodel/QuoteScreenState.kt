@@ -5,8 +5,7 @@ import com.example.quoteviewer.model.Quote
 interface QuoteScreenState {
     data object Loading: QuoteScreenState
     data class Presenting(
-        val quoteEntry: Quote,
-        val isLoading: Boolean
+        val quoteEntry: Quote
     ): QuoteScreenState
     data class History(
         val historyQuotes: List<Quote>

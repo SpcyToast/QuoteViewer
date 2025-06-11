@@ -95,7 +95,14 @@ private fun QuoteView(
 @Composable
 private fun ColumnScope.LoadingView() {
     Box(modifier = Modifier.height(20.dp))
-    Text(text = "Loading....")
+    Text(
+        modifier = Modifier
+            .fillMaxWidth(),
+//            .padding(20.dp)
+//            .align(Alignment.CenterHorizontally),
+        text = "Loading....",
+//        textAlign = Alignment.CenterHorizontally
+    )
 }
 
 
@@ -105,9 +112,6 @@ private fun ColumnScope.PresentingView(
 ) {
     Box(modifier = Modifier.height(20.dp))
     SingleQuoteView(screenState.quoteEntry)
-    if (screenState.isLoading){
-        Text(text = "Loading...")
-    }
 }
 
 @Composable
@@ -144,6 +148,19 @@ private fun SingleQuoteView(quote: Quote) {
 ////////////////////////////////////// Preview //////////////////////////////////////
 @Preview(showBackground = true, heightDp = 640)
 @Composable
+private fun PreviewLoading() {
+    QuoteViewerTheme {
+        QuoteView(
+            screenState = QuoteScreenState.Loading,
+            viewNewQuote = {},
+            viewHistory = {},
+        )
+    }
+}
+
+
+@Preview(showBackground = true, heightDp = 640)
+@Composable
 private fun PreviewPresenting() {
     QuoteViewerTheme {
         QuoteView(
@@ -152,8 +169,7 @@ private fun PreviewPresenting() {
                     "Follow your bliss and the universe will open doors where there are only walls.",
                     "Joseph Campbell",
                     ""
-                ),
-                isLoading = true
+                )
             ),
             viewNewQuote = {},
             viewHistory = {},
@@ -179,3 +195,4 @@ private fun PreviewHistory() {
         )
     }
 }
+

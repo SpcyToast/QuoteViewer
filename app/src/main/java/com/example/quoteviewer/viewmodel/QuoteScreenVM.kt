@@ -29,8 +29,7 @@ class QuoteScreenVM @Inject constructor(
                 quoteHistory.add(0, initalQuote)
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
-                        quoteEntry = initalQuote,
-                        isLoading = false
+                        quoteEntry = initalQuote
                     )
                 )
             }.onFailure { e ->
@@ -38,7 +37,6 @@ class QuoteScreenVM @Inject constructor(
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
                         quoteEntry = QuotesData.dailyQuotes[randomIndex],
-                        isLoading = false
                     )
                 )
                 Log.e("fetchError",e.message.toString())
@@ -47,13 +45,12 @@ class QuoteScreenVM @Inject constructor(
     }
 
     fun newQuote() = viewModelScope.launch {
-        _stateFlow.value = QuoteScreenState.Presenting(quoteEntry = quoteHistory.first(), isLoading = true)
+        _stateFlow.value = QuoteScreenState.Loading
         quoteSelector.fetchQuote().onSuccess { nextQuote ->
             quoteHistory.add(0, nextQuote)
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = nextQuote,
-                    isLoading = false
                 )
             )
         }.onFailure { e ->
@@ -61,7 +58,6 @@ class QuoteScreenVM @Inject constructor(
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = QuotesData.dailyQuotes[randomIndex],
-                    isLoading = false
                 )
             )
             Log.e("fetchError",e.message.toString())
