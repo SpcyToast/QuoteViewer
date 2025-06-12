@@ -1,9 +1,7 @@
 package com.example.quoteviewer.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quoteviewer.viewmodel.QuoteScreenState
 import com.example.quoteviewer.model.Quote
 import com.example.quoteviewer.model.QuotesData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,17 +27,18 @@ class QuoteScreenVM @Inject constructor(
                 quoteHistory.add(0, initalQuote)
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
-                        quoteEntry = initalQuote
+                        quoteEntry = initalQuote,
+                        errorMessage = null
                     )
                 )
             }.onFailure { e ->
-                showSnackbar(e.message.toString())
                 val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
                 val initalQuote = QuotesData.dailyQuotes[randomIndex]
                 quoteHistory.add(0, initalQuote)
                 val emitResult = _stateFlow.tryEmit(
                     QuoteScreenState.Presenting(
                         quoteEntry = initalQuote,
+                        errorMessage = e.message.toString()
                     )
                 )
             }
@@ -53,13 +52,14 @@ class QuoteScreenVM @Inject constructor(
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = nextQuote,
+                    errorMessage = null
                 )
             )
         }.onFailure { e ->
-            showSnackbar(e.message.toString())
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = quoteHistory.first(),
+                    errorMessage = e.message.toString()
                 )
             )
         }
@@ -71,19 +71,5 @@ class QuoteScreenVM @Inject constructor(
                 historyQuotes = quoteHistory
             )
         )
-    }
-
-    fun showSnackbar(errorMessage: String) {
-        viewModelScope.launch {
-            SnackbarController.sendEvent(
-                event = SnackbarEvent(
-                    message = errorMessage,
-                    action = SnackbarAction(
-                        name = "retry",
-                        action = newQuote() as () -> Unit
-                    )
-                )
-            )
-        }
     }
 }

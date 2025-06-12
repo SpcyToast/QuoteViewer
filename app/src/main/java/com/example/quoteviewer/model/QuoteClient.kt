@@ -1,7 +1,5 @@
 package com.example.quoteviewer.model
 
-import android.util.Log
-import com.example.quoteviewer.view.QuoteScreen
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

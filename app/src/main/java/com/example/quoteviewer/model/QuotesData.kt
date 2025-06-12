@@ -1,7 +1,5 @@
 package com.example.quoteviewer.model
 
-import com.example.quoteviewer.model.Quote
-
 object QuotesData {
     val dailyQuotes= listOf<Quote>(
         Quote(

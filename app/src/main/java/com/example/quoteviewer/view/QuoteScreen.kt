@@ -1,5 +1,7 @@
 package com.example.quoteviewer.view
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -32,14 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.quoteviewer.viewmodel.QuoteScreenState
 import com.example.quoteviewer.viewmodel.QuoteScreenVM
 import com.example.quoteviewer.model.Quote
 import com.example.quoteviewer.view.theme.QuoteViewerTheme
-import com.example.quoteviewer.viewmodel.SnackbarController
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -66,20 +65,6 @@ private fun QuoteView(
         SnackbarHostState()
     }
     val scope = rememberCoroutineScope()
-    ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
-        scope.launch{
-            snackbarHostState.currentSnackbarData?.dismiss()
-            val result = snackbarHostState.showSnackbar(
-                message = event.message,
-                actionLabel = event.action?.name,
-                duration = SnackbarDuration.Short
-            )
-
-            if (result == SnackbarResult.ActionPerformed){
-                event.action?.action?.invoke()
-            }
-        }
-    }
     Scaffold(
         snackbarHost = {
             SnackbarHost(
@@ -116,9 +101,15 @@ private fun QuoteView(
             when (screenState) {
                 is QuoteScreenState.Loading -> LoadingView()
                 is QuoteScreenState.Presenting -> PresentingView(
-                    screenState = screenState,)
+                    screenState = screenState,
+                    snackbarHostState = snackbarHostState,
+                    scope = scope,
+                    viewNewQuote = viewNewQuote
+                )
+
                 is QuoteScreenState.History -> HistoryView(
-                    screenState = screenState,)
+                    screenState = screenState
+                )
             }
         }
     }
@@ -137,12 +128,31 @@ private fun ColumnScope.LoadingView() {
 }
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 private fun ColumnScope.PresentingView(
     screenState: QuoteScreenState.Presenting,
+    snackbarHostState: SnackbarHostState,
+    scope: CoroutineScope,
+    viewNewQuote: () -> Unit
 ) {
     Box(modifier = Modifier.height(20.dp))
     SingleQuoteView(screenState.quoteEntry)
+    if (screenState.errorMessage != null){
+        scope.launch {
+            val result = snackbarHostState.showSnackbar(
+                message = screenState.errorMessage,
+                actionLabel = "retry",
+                duration = SnackbarDuration.Long,
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    viewNewQuote()
+                }
+                SnackbarResult.Dismissed -> {}
+            }
+        }
+    }
 }
 
 @Composable
@@ -200,7 +210,8 @@ private fun PreviewPresenting() {
                     "Follow your bliss and the universe will open doors where there are only walls.",
                     "Joseph Campbell",
                     ""
-                )
+                ),
+                errorMessage = ""
             ),
             viewNewQuote = {},
             viewHistory = {},
