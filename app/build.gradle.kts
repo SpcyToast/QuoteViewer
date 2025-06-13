@@ -59,6 +59,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -76,4 +77,9 @@ dependencies {
 
     //kotlinx
     implementation(libs.kotlinx.serialization.json)
+
+    //Mockito
+    testImplementation("org.mockito:mockito-core:5.16.1")
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(kotlin("test"))
 }
