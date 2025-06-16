@@ -15,7 +15,6 @@ class QuoteSelectorTest {
         QuoteSelector(quoteClient)
     }
 
-
     @Test
     fun `fetchQuote - get quote from API call - success`() = runTest {
         whenever(quoteClient.getQuote()).thenReturn(
