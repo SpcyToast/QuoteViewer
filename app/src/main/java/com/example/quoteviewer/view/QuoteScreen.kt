@@ -31,6 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,14 +86,24 @@ private fun QuoteView(
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    TextButton(onClick = viewNewQuote) {
+                    TextButton(
+                        onClick = viewNewQuote,
+                        modifier = Modifier.semantics { testTag="new_quote" }
+                    ) {
                         Text(text = "New Quote")
                     }
-                    TextButton(onClick = viewHistory) {
+
+                    TextButton(
+                        onClick = viewHistory,
+                        modifier = Modifier.semantics { testTag="view_history" }
+                    ) {
                         Text(text = "History")
                     }
                 }
             )
+        },
+        modifier = Modifier.semantics {
+            testTagsAsResourceId = true
         }
     ) {
         Column(
@@ -178,10 +191,15 @@ private fun SingleQuoteView(quote: Quote) {
     ) {
         Text(
             text = quote.quote,
+            modifier = Modifier.semantics {
+                testTag="quote_content"
+            }
         )
         Text(
             text = "- $thisAuthor",
-            modifier = Modifier.align(Alignment.End),
+            modifier = Modifier.align(Alignment.End).semantics {
+                testTag="quote_author"
+            },
         )
     }
 }
