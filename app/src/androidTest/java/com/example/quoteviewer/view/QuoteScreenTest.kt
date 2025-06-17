@@ -19,37 +19,37 @@ class QuoteScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @Test
-    fun displayQuoteOnLaunch(){
+    private val QUOTE_CONTENT = "quote_content"
+    private val QUOTE_AUTHOR = "quote_author"
+    private val NEW_QUOTE = "new_quote"
+
+    fun loadContent(){
         composeTestRule.waitUntil {
             composeTestRule
-                .onAllNodesWithTag("quote_content")
+                .onAllNodesWithTag(QUOTE_CONTENT)
                 .fetchSemanticsNodes().isNotEmpty()
             composeTestRule
-                .onAllNodesWithTag("quote_author")
+                .onAllNodesWithTag(QUOTE_AUTHOR)
                 .fetchSemanticsNodes().isNotEmpty()
         }
-        composeTestRule.onNodeWithTag("quote_content").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("quote_author").assertIsDisplayed()
+    }
+
+    @Test
+    fun displayQuoteOnLaunch(){
+        loadContent()
+        composeTestRule.onNodeWithTag(QUOTE_CONTENT).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(QUOTE_AUTHOR).assertIsDisplayed()
     }
 
     @Test
     fun newQuoteOnRefresh(){
-        composeTestRule.waitUntil {
-            composeTestRule
-                .onAllNodesWithTag("quote_content")
-                .fetchSemanticsNodes().isNotEmpty()
-        }
-        val initialQuote = composeTestRule.onNodeWithTag("quote_content").fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
-        composeTestRule.onNodeWithTag("quote_content").assertTextEquals(initialQuote)
-        composeTestRule.onNodeWithTag("new_quote").performClick()
-        composeTestRule.waitUntil {
-            composeTestRule
-                .onAllNodesWithTag("quote_content")
-                .fetchSemanticsNodes().isNotEmpty()
-        }
-        val updatedQuote = composeTestRule.onNodeWithTag("quote_content").fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
-        composeTestRule.onNodeWithTag("quote_content").assertTextEquals(updatedQuote)
+        loadContent()
+        val initialQuote = composeTestRule.onNodeWithTag(QUOTE_CONTENT).fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
+        composeTestRule.onNodeWithTag(QUOTE_CONTENT).assertTextEquals(initialQuote)
+        composeTestRule.onNodeWithTag(NEW_QUOTE).performClick()
+        loadContent()
+        val updatedQuote = composeTestRule.onNodeWithTag(QUOTE_CONTENT).fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
+        composeTestRule.onNodeWithTag(QUOTE_CONTENT).assertTextEquals(updatedQuote)
         assert(initialQuote != updatedQuote)
     }
 }
