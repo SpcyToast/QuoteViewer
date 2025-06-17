@@ -143,7 +143,7 @@ private fun ColumnScope.PresentingView(
             val result = snackbarHostState.showSnackbar(
                 message = screenState.errorMessage,
                 actionLabel = "retry",
-                duration = SnackbarDuration.Long,
+                duration = SnackbarDuration.Indefinite,
             )
             when (result) {
                 SnackbarResult.ActionPerformed -> {

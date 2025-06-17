@@ -26,9 +26,8 @@ class QuoteScreenVMTest{
 
     @Test
     fun `newQuote - successful response from fetchQuote`() = runTest{
-        whenever(quoteSelector.fetchQuote()).thenReturn(Result.success(Quote("test quote","test author","test category")))
-        viewModel.newQuote().join()
-        assertEquals(QuoteScreenState.Presenting(quoteEntry = Quote("test quote","test author","test category"), errorMessage = null), viewModel.stateFlow.value)
+        initialiseQuote(1)
+        assertEquals(QuoteScreenState.Presenting(quoteEntry = Quote("test quote 1","test author 1","test category 1"), errorMessage = null), viewModel.stateFlow.value)
     }
 
     @Test
