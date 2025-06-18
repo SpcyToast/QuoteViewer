@@ -1,10 +1,10 @@
 package com.example.quoteviewer.view
 
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,37 +19,34 @@ class QuoteScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
+    private val quoteContent: SemanticsNodeInteraction =
+        composeTestRule.onNodeWithTag("quote_content")
+    private val quoteAuthor: SemanticsNodeInteraction =
+        composeTestRule.onNodeWithTag("quote_author")
+    private val newQuoteButton: SemanticsNodeInteraction =
+        composeTestRule.onNodeWithTag("new_quote")
+
     @Test
     fun displayQuoteOnLaunch(){
         composeTestRule.waitUntil {
-            composeTestRule
-                .onAllNodesWithTag("quote_content")
-                .fetchSemanticsNodes().isNotEmpty()
-            composeTestRule
-                .onAllNodesWithTag("quote_author")
-                .fetchSemanticsNodes().isNotEmpty()
+            quoteContent.isDisplayed()
         }
-        composeTestRule.onNodeWithTag("quote_content").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("quote_author").assertIsDisplayed()
+        quoteContent.assertIsDisplayed()
+        quoteAuthor.assertIsDisplayed()
     }
 
     @Test
     fun newQuoteOnRefresh(){
         composeTestRule.waitUntil {
-            composeTestRule
-                .onAllNodesWithTag("quote_content")
-                .fetchSemanticsNodes().isNotEmpty()
+            quoteContent.isDisplayed()
         }
-        val initialQuote = composeTestRule.onNodeWithTag("quote_content").fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
-        composeTestRule.onNodeWithTag("quote_content").assertTextEquals(initialQuote)
-        composeTestRule.onNodeWithTag("new_quote").performClick()
+        val initialQuote = quoteContent.fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
+        newQuoteButton.performClick()
+        // TODO: better to check loading UI shows and disappears instead
         composeTestRule.waitUntil {
-            composeTestRule
-                .onAllNodesWithTag("quote_content")
-                .fetchSemanticsNodes().isNotEmpty()
+            quoteContent.isDisplayed()
         }
-        val updatedQuote = composeTestRule.onNodeWithTag("quote_content").fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
-        composeTestRule.onNodeWithTag("quote_content").assertTextEquals(updatedQuote)
+        val updatedQuote = quoteContent.fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
         assert(initialQuote != updatedQuote)
     }
 }
