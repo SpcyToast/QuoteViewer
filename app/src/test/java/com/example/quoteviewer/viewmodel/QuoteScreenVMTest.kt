@@ -2,10 +2,6 @@ package com.example.quoteviewer.viewmodel
 
 import com.example.quoteviewer.model.Quote
 import kotlinx.coroutines.test.runTest
-import okhttp3.internal.concurrent.Task
-import okhttp3.internal.wait
-import org.junit.Rule
-import org.junit.rules.TestRule
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.Test

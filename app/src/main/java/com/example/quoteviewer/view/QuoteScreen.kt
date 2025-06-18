@@ -183,7 +183,7 @@ private fun ColumnScope.HistoryView(
 @Composable
 private fun SingleQuoteView(quote: Quote?) {
     val quoteExists = quote != null
-    val thisQuote = if (quoteExists) "${quote.quote}" else ""
+    val thisQuote = if (quoteExists) quote.quote else ""
     val thisAuthor = if (quoteExists) "- ${quote.author}" else ""
     Column(
         modifier = Modifier
