@@ -20,7 +20,7 @@ class QuoteScreenVMTest{
     }
 
     suspend fun initialiseQuote(i: Int){
-        whenever(quoteSelector.fetchQuote()).thenReturn(Result.success(Quote("test quote ${i}","test author ${i}","test category ${i}")))
+        whenever(quoteSelector.fetchQuote()).thenReturn(Result.success(Quote("test quote $i","test author $i","test category $i")))
         viewModel.newQuote().join()
     }
 
@@ -32,11 +32,10 @@ class QuoteScreenVMTest{
 
     @Test
     fun `newQuote - unsuccessful response from fetchQuote`() = runTest{
-        initialiseQuote(0)
         val exception = RuntimeException("test exception")
         whenever(quoteSelector.fetchQuote()).thenReturn(Result.failure(exception))
         viewModel.newQuote().join()
-        assertEquals(QuoteScreenState.Presenting(quoteEntry = Quote("test quote 0","test author 0","test category 0"), errorMessage = "test exception"), viewModel.stateFlow.value)
+        assertEquals(QuoteScreenState.Presenting(quoteEntry = null, errorMessage = "test exception"), viewModel.stateFlow.value)
     }
 
     @Test

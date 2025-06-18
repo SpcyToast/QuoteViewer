@@ -1,6 +1,5 @@
 package com.example.quoteviewer.viewmodel
 
-import android.util.Log
 import com.example.quoteviewer.model.Quote
 import com.example.quoteviewer.model.QuoteClient
 import javax.inject.Inject

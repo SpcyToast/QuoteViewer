@@ -1,7 +1,6 @@
 package com.example.quoteviewer.view
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -182,21 +181,23 @@ private fun ColumnScope.HistoryView(
 }
 
 @Composable
-private fun SingleQuoteView(quote: Quote) {
-    val thisAuthor = quote.author
+private fun SingleQuoteView(quote: Quote?) {
+    val quoteExists = quote != null
+    val thisQuote = if (quoteExists) "${quote.quote}" else ""
+    val thisAuthor = if (quoteExists) "- ${quote.author}" else ""
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
     ) {
         Text(
-            text = quote.quote,
+            text = thisQuote,
             modifier = Modifier.semantics {
                 testTag="quote_content"
             }
         )
         Text(
-            text = "- $thisAuthor",
+            text = thisAuthor,
             modifier = Modifier.align(Alignment.End).semantics {
                 testTag="quote_author"
             },
