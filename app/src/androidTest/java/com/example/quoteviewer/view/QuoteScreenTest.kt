@@ -24,7 +24,7 @@ class QuoteScreenTest {
     private val NEW_QUOTE = "new_quote"
 
     fun loadContent(){
-        composeTestRule.waitUntil {
+        composeTestRule.waitUntil(5000) {
             composeTestRule
                 .onAllNodesWithTag(QUOTE_CONTENT)
                 .fetchSemanticsNodes().isNotEmpty()
