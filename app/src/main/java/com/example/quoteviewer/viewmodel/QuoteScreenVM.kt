@@ -3,14 +3,12 @@ package com.example.quoteviewer.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.model.Quote
-import com.example.quoteviewer.model.QuotesData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class QuoteScreenVM @Inject constructor(
@@ -22,27 +20,7 @@ class QuoteScreenVM @Inject constructor(
     private val quoteHistory: MutableList<Quote> = mutableListOf()
 
     init {
-        viewModelScope.launch {
-            quoteSelector.fetchQuote().onSuccess { initalQuote ->
-                quoteHistory.add(0, initalQuote)
-                val emitResult = _stateFlow.tryEmit(
-                    QuoteScreenState.Presenting(
-                        quoteEntry = initalQuote,
-                        errorMessage = null
-                    )
-                )
-            }.onFailure { e ->
-                val randomIndex = Random.nextInt(0, QuotesData.dailyQuotes.size -1)
-                val initalQuote = QuotesData.dailyQuotes[randomIndex]
-                quoteHistory.add(0, initalQuote)
-                val emitResult = _stateFlow.tryEmit(
-                    QuoteScreenState.Presenting(
-                        quoteEntry = initalQuote,
-                        errorMessage = e.message.toString()
-                    )
-                )
-            }
-        }
+        newQuote()
     }
 
     fun newQuote() = viewModelScope.launch {
@@ -58,7 +36,7 @@ class QuoteScreenVM @Inject constructor(
         }.onFailure { e ->
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
-                    quoteEntry = quoteHistory.first(),
+                    quoteEntry = if (quoteHistory.isNotEmpty()) quoteHistory.first() else null,
                     errorMessage = e.message.toString()
                 )
             )

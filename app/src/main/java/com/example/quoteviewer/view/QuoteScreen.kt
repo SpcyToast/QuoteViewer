@@ -135,7 +135,10 @@ private fun ColumnScope.LoadingView() {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(20.dp)
+            .semantics {
+                testTag = "loading_state"
+            },
         text = "Loading....",
     )
 }
@@ -182,21 +185,22 @@ private fun ColumnScope.HistoryView(
 }
 
 @Composable
-private fun SingleQuoteView(quote: Quote) {
-    val thisAuthor = quote.author
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+private fun SingleQuoteView(quote: Quote?) {
+    val quoteExists = quote != null
+    val thisQuote = if (quoteExists) quote.quote else ""
+    val thisAuthor = if (quoteExists) "- ${quote.author}" else ""
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 20.dp),
     ) {
         Text(
-            text = quote.quote,
+            text = thisQuote,
             modifier = Modifier.semantics {
                 testTag="quote_content"
             }
         )
         Text(
-            text = "- $thisAuthor",
+            text = thisAuthor,
             modifier = Modifier.align(Alignment.End).semantics {
                 testTag="quote_author"
             },
