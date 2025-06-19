@@ -3,6 +3,7 @@ package com.example.quoteviewer.view
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -50,6 +51,7 @@ class QuoteScreenTest {
         // If the API call fails it will redisplay the last valid quote, but I'll still add the check
         loadingState.assertIsDisplayed()
         loadConent()
+        loadingState.assertIsNotDisplayed()
         val updatedQuote = quoteContent.fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
         assert(initialQuote != updatedQuote)
     }
