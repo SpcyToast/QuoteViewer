@@ -1,5 +1,6 @@
 package com.example.quoteviewer.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quoteviewer.model.Quote
@@ -24,19 +25,27 @@ class QuoteScreenVM @Inject constructor(
     }
 
     fun newQuote() = viewModelScope.launch {
+        fetchNewQuote()
+    }
+
+    @VisibleForTesting
+    suspend fun fetchNewQuote() {
         _stateFlow.value = QuoteScreenState.Loading
-        quoteSelector.fetchQuote().onSuccess { nextQuote ->
-            quoteHistory.add(0, nextQuote)
-            val emitResult = _stateFlow.tryEmit(
-                QuoteScreenState.Presenting(
-                    quoteEntry = nextQuote,
-                )
-            )
-        }.onFailure { e ->
-            val emitResult = _stateFlow.tryEmit(
+        val fetchQuoteResult = quoteSelector.fetchQuote()
+        val nextQuote = fetchQuoteResult.getOrNull()
+        if (nextQuote == null) {
+            val error = fetchQuoteResult.exceptionOrNull()!!
+            _stateFlow.emit(
                 QuoteScreenState.Error(
                     previousQuote = quoteHistory.firstOrNull(),
-                    errorMessage = e.message.toString()
+                    errorMessage = error.message.toString()
+                )
+            )
+        } else {
+            quoteHistory.add(0, nextQuote)
+            _stateFlow.emit(
+                QuoteScreenState.Presenting(
+                    quoteEntry = nextQuote,
                 )
             )
         }

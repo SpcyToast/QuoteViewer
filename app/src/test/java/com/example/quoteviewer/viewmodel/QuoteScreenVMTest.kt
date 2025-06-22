@@ -7,7 +7,7 @@ import org.mockito.kotlin.whenever
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class QuoteScreenVMTest{
+class QuoteScreenVMTest {
 
     private val quoteSelector = mock<QuoteSelector>()
 
@@ -15,32 +15,72 @@ class QuoteScreenVMTest{
         QuoteScreenVM(quoteSelector)
     }
 
-    suspend fun initialiseQuote(i: Int){
-        whenever(quoteSelector.fetchQuote()).thenReturn(Result.success(Quote("test quote $i","test author $i","test category $i")))
-        viewModel.newQuote().join()
+    @Test
+    fun `newQuote - successful response from fetchQuote`() = runTest {
+        mockQuoteSelectorResponse(1)
+        viewModel.fetchNewQuote()
+        val expected = QuoteScreenState.Presenting(
+            quoteEntry = Quote(
+                "test quote 1",
+                "test author 1",
+                "test category 1",
+            )
+        )
+        assertEquals(expected, viewModel.stateFlow.value)
     }
 
     @Test
-    fun `newQuote - successful response from fetchQuote`() = runTest{
-        initialiseQuote(1)
-        assertEquals(QuoteScreenState.Presenting(quoteEntry = Quote("test quote 1","test author 1","test category 1"), errorMessage = null), viewModel.stateFlow.value)
-    }
-
-    @Test
-    fun `newQuote - unsuccessful response from fetchQuote`() = runTest{
+    fun `newQuote - unsuccessful response from fetchQuote`() = runTest {
         val exception = RuntimeException("test exception")
         whenever(quoteSelector.fetchQuote()).thenReturn(Result.failure(exception))
-        viewModel.newQuote().join()
-        assertEquals(QuoteScreenState.Presenting(quoteEntry = null, errorMessage = "test exception"), viewModel.stateFlow.value)
+        viewModel.fetchNewQuote()
+        val expected = QuoteScreenState.Error(
+            previousQuote = null,
+            errorMessage = "test exception"
+        )
+        assertEquals(expected, viewModel.stateFlow.value)
     }
 
     @Test
-    fun `viewHistory - history view shows list of quotes from newest to oldest`() = runTest{
-        initialiseQuote(1)
-        initialiseQuote(2)
-        initialiseQuote(3)
+    fun `viewHistory - history view shows list of quotes from newest to oldest`() = runTest {
+        mockQuoteSelectorResponse(1)
+        viewModel.fetchNewQuote()
+        mockQuoteSelectorResponse(2)
+        viewModel.fetchNewQuote()
+        mockQuoteSelectorResponse(3)
+        viewModel.fetchNewQuote()
         viewModel.viewHistory()
-        assertEquals(QuoteScreenState.History(historyQuotes = listOf<Quote>(Quote("test quote 3","test author 3","test category 3"), Quote("test quote 2","test author 2","test category 2"), Quote("test quote 1","test author 1","test category 1"))), viewModel.stateFlow.value)
+
+        val expected = QuoteScreenState.History(
+            historyQuotes = listOf(
+                Quote(
+                    "test quote 3",
+                    "test author 3",
+                    "test category 3",
+                ),
+                Quote("test quote 2",
+                    "test author 2",
+                    "test category 2",
+                ),
+                Quote("test quote 1",
+                    "test author 1",
+                    "test category 1",
+                )
+            )
+        )
+        assertEquals(expected, viewModel.stateFlow.value)
+    }
+
+    private suspend fun mockQuoteSelectorResponse(i: Int) {
+        whenever(quoteSelector.fetchQuote()).thenReturn(
+            Result.success(
+                Quote(
+                    quote = "test quote $i",
+                    author = "test author $i",
+                    category = "test category $i",
+                )
+            )
+        )
     }
 
 }

@@ -32,7 +32,11 @@ class QuoteSelectorTest {
 
     @Test
     fun `fetchQuote - get quote from API call - failure`() = runTest {
-        whenever(quoteClient.getQuote()).thenThrow()
-        assertTrue { quoteSelector.fetchQuote().isFailure }
+        val sampleException = RuntimeException("test")
+        whenever(quoteClient.getQuote()).thenThrow(sampleException)
+
+        val quoteResult = quoteSelector.fetchQuote()
+        assertTrue(quoteResult.isFailure)
+        assertEquals(sampleException, quoteResult.exceptionOrNull())
     }
 }

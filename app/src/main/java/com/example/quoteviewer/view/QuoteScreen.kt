@@ -37,11 +37,10 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.quoteviewer.viewmodel.QuoteScreenState
-import com.example.quoteviewer.viewmodel.QuoteScreenVM
 import com.example.quoteviewer.model.Quote
 import com.example.quoteviewer.view.theme.QuoteViewerTheme
-import kotlinx.coroutines.CoroutineScope
+import com.example.quoteviewer.viewmodel.QuoteScreenState
+import com.example.quoteviewer.viewmodel.QuoteScreenVM
 import kotlinx.coroutines.launch
 
 @Composable
