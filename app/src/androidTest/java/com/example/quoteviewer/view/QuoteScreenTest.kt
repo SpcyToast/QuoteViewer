@@ -29,30 +29,30 @@ class QuoteScreenTest {
     private val loadingState: SemanticsNodeInteraction =
         composeTestRule.onNodeWithTag("loading_state")
 
-    fun loadConent(){
-        composeTestRule.waitUntil(5000) {
-            quoteContent.isDisplayed()
-        }
-    }
-
     @Test
     fun displayQuoteOnLaunch(){
-        loadConent()
+        waitUntilQuoteDisplays()
         quoteContent.assertIsDisplayed()
         quoteAuthor.assertIsDisplayed()
     }
 
     @Test
     fun newQuoteOnRefresh(){
-        loadConent()
-        val initialQuote = quoteContent.fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
+        waitUntilQuoteDisplays()
+        val initialQuote = quoteContent.fetchSemanticsNode().config[SemanticsProperties.Text].joinToString()
+
         newQuoteButton.performClick()
-        // TODO: better to check loading UI shows and disappears instead
         // If the API call fails it will redisplay the last valid quote, but I'll still add the check
         loadingState.assertIsDisplayed()
-        loadConent()
+        waitUntilQuoteDisplays()
         loadingState.assertIsNotDisplayed()
-        val updatedQuote = quoteContent.fetchSemanticsNode().config.get(SemanticsProperties.Text).joinToString()
+        val updatedQuote = quoteContent.fetchSemanticsNode().config[SemanticsProperties.Text].joinToString()
         assert(initialQuote != updatedQuote)
+    }
+
+    private fun waitUntilQuoteDisplays() {
+        composeTestRule.waitUntil(5000) {
+            quoteContent.isDisplayed()
+        }
     }
 }
