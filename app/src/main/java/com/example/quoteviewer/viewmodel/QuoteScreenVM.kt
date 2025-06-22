@@ -30,21 +30,20 @@ class QuoteScreenVM @Inject constructor(
             val emitResult = _stateFlow.tryEmit(
                 QuoteScreenState.Presenting(
                     quoteEntry = nextQuote,
-                    errorMessage = null
                 )
             )
         }.onFailure { e ->
             val emitResult = _stateFlow.tryEmit(
-                QuoteScreenState.Presenting(
-                    quoteEntry = if (quoteHistory.isNotEmpty()) quoteHistory.first() else null,
+                QuoteScreenState.Error(
+                    previousQuote = quoteHistory.firstOrNull(),
                     errorMessage = e.message.toString()
                 )
             )
         }
     }
 
-    fun viewHistory() = viewModelScope.launch {
-        val emitResult = _stateFlow.tryEmit(
+    fun viewHistory() {
+        _stateFlow.tryEmit(
             QuoteScreenState.History(
                 historyQuotes = quoteHistory
             )

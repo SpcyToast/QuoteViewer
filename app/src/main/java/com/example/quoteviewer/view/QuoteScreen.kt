@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -114,11 +115,12 @@ private fun QuoteView(
                 is QuoteScreenState.Loading -> LoadingView()
                 is QuoteScreenState.Presenting -> PresentingView(
                     screenState = screenState,
-                    snackbarHostState = snackbarHostState,
-                    scope = scope,
-                    viewNewQuote = viewNewQuote
                 )
-
+                is QuoteScreenState.Error -> ErrorStateView(
+                    screenState = screenState,
+                    snackBarHostState = snackbarHostState,
+                    fetchNewQuote = viewNewQuote,
+                )
                 is QuoteScreenState.History -> HistoryView(
                     screenState = screenState
                 )
@@ -147,22 +149,33 @@ private fun ColumnScope.LoadingView() {
 @Composable
 private fun ColumnScope.PresentingView(
     screenState: QuoteScreenState.Presenting,
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope,
-    viewNewQuote: () -> Unit
 ) {
     Box(modifier = Modifier.height(20.dp))
     SingleQuoteView(screenState.quoteEntry)
-    if (screenState.errorMessage != null){
+}
+
+@Composable
+private fun ColumnScope.ErrorStateView(
+    screenState: QuoteScreenState.Error,
+    snackBarHostState: SnackbarHostState,
+    fetchNewQuote: () -> Unit,
+) {
+    Box(modifier = Modifier.height(20.dp))
+    val previousQuote = screenState.previousQuote
+    if (previousQuote != null) {
+        SingleQuoteView(previousQuote)
+    }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
         scope.launch {
-            val result = snackbarHostState.showSnackbar(
+            val result = snackBarHostState.showSnackbar(
                 message = screenState.errorMessage,
                 actionLabel = "retry",
                 duration = SnackbarDuration.Indefinite,
             )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
-                    viewNewQuote()
+                    fetchNewQuote()
                 }
                 SnackbarResult.Dismissed -> {}
             }
@@ -184,10 +197,9 @@ private fun ColumnScope.HistoryView(
 }
 
 @Composable
-private fun SingleQuoteView(quote: Quote?) {
-    val quoteExists = quote != null
-    val thisQuote = if (quoteExists) quote.quote else ""
-    val thisAuthor = if (quoteExists) "- ${quote.author}" else ""
+private fun SingleQuoteView(quote: Quote) {
+    val thisQuote = quote.quote
+    val thisAuthor = "- ${quote.author}"
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,7 +245,26 @@ private fun PreviewPresenting() {
                     "Joseph Campbell",
                     ""
                 ),
-                errorMessage = ""
+            ),
+            viewNewQuote = {},
+            viewHistory = {},
+        )
+    }
+}
+
+
+@Preview(showBackground = true, heightDp = 640)
+@Composable
+private fun PreviewErrorState() {
+    QuoteViewerTheme {
+        QuoteView(
+            screenState = QuoteScreenState.Error(
+                previousQuote = Quote(
+                    "Nothing lasts forever. Not even your troubles.",
+                    "Author 2",
+                    ""
+                ),
+                errorMessage = "Null Pointer Exception"
             ),
             viewNewQuote = {},
             viewHistory = {},
