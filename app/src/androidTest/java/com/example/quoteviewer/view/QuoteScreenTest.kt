@@ -40,9 +40,7 @@ class QuoteScreenTest {
     fun newQuoteOnRefresh(){
         waitUntilQuoteDisplays()
         val initialQuote = quoteContent.fetchSemanticsNode().config[SemanticsProperties.Text].joinToString()
-
         newQuoteButton.performClick()
-        // If the API call fails it will redisplay the last valid quote, but I'll still add the check
         loadingState.assertIsDisplayed()
         waitUntilQuoteDisplays()
         loadingState.assertIsNotDisplayed()

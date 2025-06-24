@@ -1,6 +1,5 @@
 package com.example.quoteviewer.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -66,7 +65,6 @@ private fun QuoteView(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-    val scope = rememberCoroutineScope()
     Scaffold(
         snackbarHost = {
             SnackbarHost(
@@ -143,8 +141,6 @@ private fun ColumnScope.LoadingView() {
     )
 }
 
-
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 private fun ColumnScope.PresentingView(
     screenState: QuoteScreenState.Presenting,
